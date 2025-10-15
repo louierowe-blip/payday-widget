@@ -1,8 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Next Payday Date</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Payday</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -19,12 +20,42 @@
   </style>
 </head>
 <body>
-  <div id="payday"></div>
+  <div id="payday">Loading…</div>
   <script>
     const PAYDAYS = [
       "2025-10-27",
       "2025-11-27",
       "2025-12-23",
       "2026-01-27",
-      "2026
+      "2026-02-27",
+      "2026-03-27",
+      "2026-04-27",
+      "2026-05-27",
+      "2026-06-26"
+    ];
+
+    const suffix = (n) => {
+      const s = ["th","st","nd","rd"];
+      const v = n % 100;
+      return n + (s[(v - 20) % 10] || s[v] || s[0]);
+    };
+
+    (function () {
+      const now = new Date();
+      const next = PAYDAYS.map(d => new Date(d + "T00:00:00"))
+                          .find(d => d >= now);
+      const div = document.getElementById("payday");
+      if (next) {
+        const day = suffix(next.getDate());
+        const month = next.toLocaleString("en-GB", { month: "long", timeZone: "Europe/London" });
+        const year = next.getFullYear();
+        div.textContent = `${day} ${month} ${year}`;
+      } else {
+        div.textContent = "No future paydays";
+      }
+    })();
+  </script>
+</body>
+</html>
+
 
