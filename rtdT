@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Latest Snapshot</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <!-- Try to prevent caching of this page itself -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <style>
+    html, body { height: 100%; margin: 0; }
+    body { display: grid; place-items: center; background: #0b0b0b; }
+    img { max-width: 100%; max-height: 100vh; height: auto; display: block; }
+  </style>
+</head>
+<body>
+  <img id="shot" alt="Latest snapshot">
+  <script>
+    // 1) Put your OneDrive sharing link here
+    //    Use the direct file link you get from Share or Copy link
+    //    For OneDrive for Business/SharePoint links, "download=1" usually returns raw bytes
+    const ONEDRIVE_BASE = "https://nordelluk-my.sharepoint.com/personal/louie_rowe_nordell_co_uk/Documents/IQMS%20Image/IQMS.png";
+
+    // Optional controls via query string:
+    // ?interval=300   refresh every 300 seconds
+    // ?bg=ffffff      background hex for the page (no #)
+    const qs = new URLSearchParams(location.search);
+    const intervalSec = Math.max(15, parseInt(qs.get("interval") || "300")); // min 15s
+    const bg = qs.get("bg");
+    if (bg) document.body.style.background = `#${bg}`;
+
+    function loadSnapshot() {
+      const url = new URL(ONEDRIVE_BASE);
+      // These params vary by tenant/link type. One of the following usually works.
+      // Try download=1 first. If your link needs "web=1" instead, swap it.
+      url.searchParams.set("download", "1");
+      // Cache buster
+      url.searchParams.set("t", Date.now().toString());
+      document.getElementById("shot").src = url.toString();
+    }
+
+    loadSnapshot();
+    setInterval(loadSnapshot, intervalSec * 1000);
+  </script>
+</body>
+</html>
